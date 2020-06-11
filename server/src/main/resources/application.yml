@@ -1,0 +1,102 @@
+server:
+  tomcat:
+    uri-encoding: UTF-8
+  port: 8060
+
+logging:
+  level:
+    org.springframework.web: ERROR
+    net.consensys: DEBUG
+    net.consensys.configs: ERROR
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5p %c: %M - %m%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5p %c: %M - %m%n"
+  file: /logs/application.log
+
+#ethereum:
+#  nodes:
+#  - name: default
+#    url: ${ETHEREUM_NODE_URL:https://telsius.io.builders:22000}
+#    blockStrategy: POLL
+#    syncingThreshold: 100
+#    healthcheckInterval: 3000
+#  healthcheck:
+#    pollInterval: 2000
+#  blockStrategy: POLL
+
+hashgraph:
+  nodes:
+    - name: kabuto
+      type: KABUTO
+      url: http://api.testnet.kabuto.sh/v1
+      pollingInterval: ${POLLING_INTERVAL:2000}
+  healthcheck:
+    pollInterval: 2000
+#eventFilters:
+#  - id: CryptoKittiesTransfer
+#    contractAddress: "0x06012c8cf97bead5deae237070f9587f8e7a266d"
+#    eventSpecification:
+#      eventName: Transfer
+#      nonIndexedParameterDefinitions:
+#        - position: 0
+#          type: ADDRESS
+#        - position: 1
+#          type: ADDRESS
+#        - position: 2
+#          type: UINT256
+#
+#    correlationId:
+#      type: NON_INDEXED_PARAMETER
+#      index: 2
+
+transactionFilters:
+- nodeName: kabuto
+  type: "FROM_ADDRESS"
+  transactionIdentifierValue: 0.0.46764
+  statuses: ['FAILED']
+
+
+eventStore:
+  type: DB
+  url: http://localhost:8081/api/rest/v1
+  eventPath: /event
+  latestBlockPath: /latestblock
+database:
+  type: MONGO
+
+broadcaster:
+  type: HTTP
+  cache:
+    expirationMillis: 6000000
+  event:
+    confirmation:
+      numBlocksToWait: 12
+      numBlocksToWaitForMissingTx: 100
+      numBlocksToWaitBeforeInvalidating: 2
+  multiInstance: false
+  enableBlockNotifications: false
+  http:
+    contractEventsUrl: https://oxiles.free.beeceptor.com
+    blockEventsUrl: https://oxiles.free.beeceptor.com
+    transactionEventsUrl: https://oxiles.free.beeceptor.com
+
+
+
+management:
+  endpoints:
+    web.base-path: /monitoring
+    enabled-by-default: false
+    web.exposure.include: "*"
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+    metrics:
+      enabled: false
+    prometheus:
+      enabled: false
+  metrics:
+    export:
+      prometheus:
+        enabled: false
+
