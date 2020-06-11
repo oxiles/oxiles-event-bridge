@@ -27,7 +27,7 @@ Added to current Eventeum functionalities, configuration, which is exactly the s
 * Hedera DragonGlass transaction input listener
 * Soon Hedera mirror node transaction and smart contract event listener 
 
-##Demo / Example 
+## Demo / Example 
 
 Please checkout our demo project, to run oxiles and experience a full working example with a basic usage
 
