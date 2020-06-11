@@ -7,7 +7,7 @@ Blockchain / DLT  is a powerful but complex ecosystem to start with. It encompas
 We envisioned a set of components included on a blockchain agnostic orchestration platform, that facilitates project implementation, speeds up business value delivery, and includes production support and easy customization possibilities.
 A product that shifts focus to business value and encapsule complexity on a simple use platform.
 
-That's oxiles. The baseline of oxiles has been leveraged on [Eventeum](https://github.com/ConsenSys/Eventeum), the Ethereum Event Bridge. we are core committers of Oxiles, but We have forked the project, to extend the current capabilities to make it blockchain agnostic
+That's oxiles. The baseline of oxiles has been leveraged on [Eventeum](https://github.com/ConsenSys/Eventeum), the Ethereum Event Bridge. We are core committers of Eventeum, but We have forked the project, to extend the current capabilities to make it blockchain agnostic
 and multi Input Listener and Broadcaster. All credits to Kauri, Consensys and specially Craig Williams for all this base work on Ethereum.
 On the next months, we will try to keep the project linked but separated, using Oxiles as a Library and extending the core from outside.
 
@@ -31,7 +31,7 @@ Added to current Eventeum functionalities, configuration, which is exactly the s
 
 Please checkout our demo project, to run oxiles and experience a full working example with a basic usage
 
--------> link <-----
+[Oxiles event bridge demo](https://github.com/oxiles/oxiles-event-bridge-demo)
 
 
 ## Configuring Nodes
