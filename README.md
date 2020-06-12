@@ -57,7 +57,7 @@ hashgraph:
    - name: dragonlass
      type: DRAGONGLASS
      url: https://api.dragonglass.me/hedera/api
-     apiKey: 
+     apiKey: b04c8155-1cc9-3b4d-93e8-e9ee2c8e65d3
      pollingInterval: ${POLLING_INTERVAL:2000}
 ```
 ## Registering a Transaction Monitor

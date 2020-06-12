@@ -49,7 +49,7 @@ public class RESTEventStore implements EventStore {
     }
 
     @Override
-    public boolean txExistsById(String id) {
+    public boolean txExistsByHashAndNodeType(String hash, String nodeType) {
         return false;
     }
 }

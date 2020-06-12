@@ -1,6 +1,7 @@
 package io.oxiles.service;
 
 import io.oxiles.dto.event.ContractEventDetails;
+import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
 import io.oxiles.integration.eventstore.EventStore;
 import io.oxiles.model.LatestBlock;
 import org.springframework.data.domain.Page;
@@ -56,5 +57,9 @@ public class DefaultEventStoreService implements EventStoreService {
     public Optional<LatestBlock> getLatestBlock(String nodeName) {
 
         return eventStore.getLatestBlockForNode(nodeName);
+    }
+
+    public Optional<HCSMessageTransactionDetails> getLatestMessageFromTopic(String mirrorNode, String topicId) {
+        return eventStore.getLatestMessageFromTopic(mirrorNode, topicId);
     }
 }

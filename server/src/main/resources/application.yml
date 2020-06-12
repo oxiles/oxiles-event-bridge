@@ -35,6 +35,10 @@ hashgraph:
       url: https://api.dragonglass.me/hedera/api
       pollingInterval: ${POLLING_INTERVAL:2000}
       apiKey: b04c8155-1cc9-3b4d-93e8-e9ee2c8e65d3
+    - name: hcs
+      type: MIRROR
+      url: hcs.testnet.mirrornode.hedera.com:5600
+      pollingInterval: ${POLLING_INTERVAL:2000}
   healthcheck:
     pollInterval: 2000
 #eventFilters:
@@ -63,6 +67,10 @@ transactionFilters:
   type: "FROM_ADDRESS"
   transactionIdentifierValue: 0.0.46764
   statuses: ['FAILED']
+- nodeName: hcs
+  nodeType: MIRROR
+  type: "TOPIC"
+  transactionIdentifierValue: 0.0.65133
 
 eventStore:
   type: DB

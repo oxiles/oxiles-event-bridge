@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 @ConditionalOnProperty(name = "eventStore.type", havingValue = "DB")
 @ConditionalOnMissingBean(EventStoreFactory.class)
 public interface TransactionDetailsRepository extends CrudRepository<HashGraphTransactionData, String> {
+    boolean existsByHashAndNodeType(String hash, String nodeType);
 }

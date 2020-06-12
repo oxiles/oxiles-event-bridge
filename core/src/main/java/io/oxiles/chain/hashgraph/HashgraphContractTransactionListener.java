@@ -5,10 +5,12 @@ import io.oxiles.integration.broadcast.blockchain.BlockchainEventBroadcaster;
 import io.oxiles.integration.eventstore.EventStore;
 import io.oxiles.integration.eventstore.SaveableEventStore;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 public class HashgraphContractTransactionListener implements ContractTransactionListener {
 
     private EventStore eventStore;
@@ -16,8 +18,9 @@ public class HashgraphContractTransactionListener implements ContractTransaction
 
     @Override
     public void onTransaction(HashGraphTransactionData txData) {
-        if (!eventStore.txExistsById(txData.getId())) {
+        if (!eventStore.txExistsByHashAndNodeType(txData.getHash(), txData.getNodeType())) {
             //broadcasting
+            log.info("New Transaction id detected: {}, {}", txData.getNodeType(), txData.getHash());
             eventBroadcaster.broadcastTransaction(txData);
             if (eventStore instanceof SaveableEventStore){
                 ((SaveableEventStore)eventStore).save(txData);

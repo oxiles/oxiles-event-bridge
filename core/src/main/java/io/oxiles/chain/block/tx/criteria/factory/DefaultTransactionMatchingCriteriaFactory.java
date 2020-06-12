@@ -1,9 +1,6 @@
 package io.oxiles.chain.block.tx.criteria.factory;
 
-import io.oxiles.chain.block.tx.criteria.FromAddressMatchingCriteria;
-import io.oxiles.chain.block.tx.criteria.ToAddressMatchingCriteria;
-import io.oxiles.chain.block.tx.criteria.TransactionMatchingCriteria;
-import io.oxiles.chain.block.tx.criteria.TxHashMatchingCriteria;
+import io.oxiles.chain.block.tx.criteria.*;
 import io.oxiles.model.TransactionIdentifierType;
 import io.oxiles.model.TransactionMonitoringSpec;
 import org.springframework.stereotype.Component;
@@ -23,6 +20,10 @@ public class DefaultTransactionMatchingCriteriaFactory implements TransactionMat
 
         if (spec.getType() == TransactionIdentifierType.FROM_ADDRESS) {
             return new FromAddressMatchingCriteria(spec.getNodeName(), spec.getTransactionIdentifierValue(), spec.getStatuses());
+        }
+
+        if (spec.getType() == TransactionIdentifierType.TOPIC) {
+            return new TopicMatchingCriteria(spec.getNodeName(), spec.getTransactionIdentifierValue(), spec.getStatuses());
         }
 
         throw new UnsupportedOperationException("Type: " + spec.getType() + " not currently supported");

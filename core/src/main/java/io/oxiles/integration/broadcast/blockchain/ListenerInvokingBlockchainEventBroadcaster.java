@@ -2,6 +2,7 @@ package io.oxiles.integration.broadcast.blockchain;
 
 import io.oxiles.dto.block.BlockDetails;
 import io.oxiles.dto.event.ContractEventDetails;
+import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
 import io.oxiles.dto.transaction.TransactionDetails;
 import lombok.AllArgsConstructor;
 import io.oxiles.chain.service.strategy.HashGraphTransactionData;
@@ -31,6 +32,11 @@ import io.oxiles.chain.service.strategy.HashGraphTransactionData;
 
     }
 
+    @Override
+    public void broadcastMessageTransaction(HCSMessageTransactionDetails hcsMessageTransactionDetails) {
+        listener.onTransactionEvent(hcsMessageTransactionDetails);
+    }
+
     public interface OnBlockchainEventListener {
 
         void onNewBlock(BlockDetails block);
@@ -38,6 +44,8 @@ import io.oxiles.chain.service.strategy.HashGraphTransactionData;
         void onContractEvent(ContractEventDetails eventDetails);
 
         void onTransactionEvent(TransactionDetails transactionDetails);
+
+        void onTransactionEvent(HCSMessageTransactionDetails hcsMessageTransactionDetails);
     }
 
 }

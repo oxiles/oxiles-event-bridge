@@ -2,12 +2,10 @@ package io.oxiles.integration.broadcast.blockchain;
 
 import io.oxiles.dto.block.BlockDetails;
 import io.oxiles.dto.event.ContractEventDetails;
+import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
+import io.oxiles.dto.message.*;
 import io.oxiles.dto.transaction.TransactionDetails;
 import io.oxiles.chain.service.strategy.HashGraphTransactionData;
-import io.oxiles.dto.message.BlockEvent;
-import io.oxiles.dto.message.ContractEvent;
-import io.oxiles.dto.message.EventeumMessage;
-import io.oxiles.dto.message.TransactionEvent;
 import io.oxiles.integration.RabbitSettings;
 import io.oxiles.utils.JSON;
 import org.slf4j.Logger;
@@ -84,6 +82,22 @@ public class RabbitBlockChainEventBroadcaster implements BlockchainEventBroadcas
     @Override
     public void broadcastTransaction(HashGraphTransactionData hashGraphTransactionData) {
 
+    }
+
+    @Override
+    public void broadcastMessageTransaction(HCSMessageTransactionDetails hcsMessageTransactionDetails) {
+        final EventeumMessage<HCSMessageTransactionDetails> message = new HCSMessageTransactionEvent(hcsMessageTransactionDetails);
+        rabbitTemplate.convertAndSend(this.rabbitSettings.getExchange(),
+                String.format("%s.%s", this.rabbitSettings.getTransactionEventsRoutingKey(), Integer.valueOf(hcsMessageTransactionDetails.hashCode()).toString()),
+                message);
+
+        LOG.info(String.format("New transaction event sent: [%s] to exchange [%s] with routing key [%s.%s]",
+                JSON.stringify(message),
+                this.rabbitSettings.getExchange(),
+                this.rabbitSettings.getTransactionEventsRoutingKey(),
+                Integer.valueOf(hcsMessageTransactionDetails.hashCode()).toString()
+                )
+        );
     }
 
     protected EventeumMessage<BlockDetails> createBlockEventMessage(BlockDetails blockDetails) {
