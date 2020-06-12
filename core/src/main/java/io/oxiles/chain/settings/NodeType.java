@@ -4,7 +4,7 @@ public enum NodeType
 {
     NORMAL("NORMAL"),
     MIRROR("MIRROR"),
-    DRAGONCLASS("DRAGONCLASS"),
+    DRAGONGLASS("DRAGONGLASS"),
     KABUTO("KABUTO");
 
     private String nodeType;

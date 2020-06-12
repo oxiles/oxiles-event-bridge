@@ -28,7 +28,7 @@ public class DragonGlassSDKTest {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         this.underTest = new DragonGlassSDK(objectMapper, client.newBuilder().build(),"https://api.dragonglass.me/hedera/api",
-                Executors.newScheduledThreadPool(1), 10000, null);
+                Executors.newScheduledThreadPool(1), 10000, null, "b04c8155-1cc9-3b4d-93e8-e9ee2c8e65d3");
     }
 
     @Test

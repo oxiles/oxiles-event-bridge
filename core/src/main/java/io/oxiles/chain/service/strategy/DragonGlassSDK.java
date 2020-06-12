@@ -27,15 +27,17 @@ public class DragonGlassSDK {
     private final long pollingInterval;
     private OkHttpClient okHttpClient;
     private ContractTransactionListener contractTransactionListener;
+    private String apiKey;
 
-    public DragonGlassSDK(ObjectMapper objectMapper, OkHttpClient ok, String dragonGlassUrl, ScheduledExecutorService scheduledExecutorService, long pollingInterval, ContractTransactionListener txListener) {
+    public DragonGlassSDK(ObjectMapper objectMapper, OkHttpClient ok, String dragonGlassUrl, ScheduledExecutorService scheduledExecutorService,
+                          long pollingInterval, ContractTransactionListener txListener, String apiKey) {
         this.okHttpClient = ok;
         this.objectMapper = objectMapper;
         this.dragonGlassUrl = dragonGlassUrl;
         this.scheduledExecutorService = scheduledExecutorService;
         this.pollingInterval = pollingInterval;
         this.contractTransactionListener = txListener;
-
+        this.apiKey = apiKey;
     }
 
     public Disposable transactionFlowable(String contractId){
@@ -64,7 +66,7 @@ public class DragonGlassSDK {
 
                 Request request = new Request.Builder()
                         .url(url)
-                        .addHeader("X-API-KEY", "b04c8155-1cc9-3b4d-93e8-e9ee2c8e65d3")
+                        .addHeader("X-API-KEY", apiKey)
                         .get()
                         .build();
 
@@ -75,7 +77,7 @@ public class DragonGlassSDK {
                         if (response.code() == 200) {
 
                             DragonGlassTransactionMain transactionMain = this.objectMapper.reader().forType( new TypeReference<DragonGlassTransactionMain>
-                                    (){}).withRootName("data").readValue(response.body().string());
+                                    (){}).withoutRootName().readValue(response.body().string());
 
                             transactionMain.data.forEach( tx -> {
                                 HashGraphTransactionData data = HashGraphTransactionData.factory(tx);

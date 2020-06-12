@@ -47,31 +47,32 @@ ethereum:
 
 hashgraph:
   nodes:
-    - name: kabuto
-      type: KABUTO  
-      url: http://api.testnet.kabuto.sh/v1
-      pollingInterval: ${POLLING_INTERVAL:2000}
+   - name: kabuto
+     type: KABUTO  
+     url: http://api.testnet.kabuto.sh/v1
+     pollingInterval: ${POLLING_INTERVAL:2000}
    - name: hcs
      type: MIRROR
      url: hcs.mainnet.mirrornode.hedera.com:5600
    - name: dragonlass
      type: DRAGONGLASS
-     url: hcs.mainnet.mirrornode.hedera.com:5600
+     url: https://api.dragonglass.me/hedera/api
+     apiKey: 
      pollingInterval: ${POLLING_INTERVAL:2000}
 ```
 ## Registering a Transaction Monitor
 
+```yaml
 transactionFilters:
 - nodeName: kabuto
   type: "FROM_ADDRESS"
   transactionIdentifierValue: 0.0.46764
   statuses: ['FAILED']
-transactionFilters:
 - nodeName: dragonglass
   type: "FROM_ADDRESS"
   transactionIdentifierValue: 0.0.46764
   statuses: ['SUCCESS']
-
+```
 
 ### Transaction Events
 When a new transaction that matches a transaction monitor is sealed / validated / mined the following json us generated:

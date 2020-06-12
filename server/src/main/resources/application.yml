@@ -30,6 +30,11 @@ hashgraph:
       type: KABUTO
       url: http://api.testnet.kabuto.sh/v1
       pollingInterval: ${POLLING_INTERVAL:2000}
+    - name: dragonGlass
+      type: DRAGONGLASS
+      url: https://api.dragonglass.me/hedera/api
+      pollingInterval: ${POLLING_INTERVAL:2000}
+      apiKey: b04c8155-1cc9-3b4d-93e8-e9ee2c8e65d3
   healthcheck:
     pollInterval: 2000
 #eventFilters:
@@ -54,7 +59,10 @@ transactionFilters:
   type: "FROM_ADDRESS"
   transactionIdentifierValue: 0.0.46764
   statuses: ['FAILED']
-
+- nodeName: dragonGlass
+  type: "FROM_ADDRESS"
+  transactionIdentifierValue: 0.0.46764
+  statuses: ['FAILED']
 
 eventStore:
   type: DB
