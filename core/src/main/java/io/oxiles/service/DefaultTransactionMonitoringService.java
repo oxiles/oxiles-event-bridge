@@ -129,15 +129,19 @@ public class DefaultTransactionMonitoringService implements TransactionMonitorin
 
         NodeServices nodeServices = chainServices.getNodeServices(spec.getNodeName());
 
-        if(nodeServices.getNodeType().equals(NodeType.NORMAL)){
-            monitoringBlockListener.addMatchingCriteria(matchingCriteria);
-        }
-        else if(nodeServices.getNodeType().equals(NodeType.KABUTO)){
-            ((HashgraphNodeServices)nodeServices).getKabutoSDK().transactionFlowable(spec.getTransactionIdentifierValue());
-        }
+        if (nodeServices == null) {
+            log.warn("The defined transaction monitor ".concat(spec.getId()).concat(" does not had valid node service"));
+        } else {
+            if (nodeServices.getNodeType().equals(NodeType.NORMAL)) {
+                monitoringBlockListener.addMatchingCriteria(matchingCriteria);
+            } else if (nodeServices.getNodeType().equals(NodeType.KABUTO)) {
+                ((HashgraphNodeServices) nodeServices).getKabutoSDK().transactionFlowable(spec.getTransactionIdentifierValue());
+            } else if (nodeServices.getNodeType().equals(NodeType.DRAGONGLASS)) {
+                ((HashgraphNodeServices) nodeServices).getDragonGlassSDK().transactionFlowable(spec.getTransactionIdentifierValue());
+            }
 
-
-        transactionMonitors.put(spec.getId(), new TransactionMonitor(spec, matchingCriteria));
+            transactionMonitors.put(spec.getId(), new TransactionMonitor(spec, matchingCriteria));
+        }
     }
 
     private TransactionMonitoringSpec saveTransactionMonitoringSpec(TransactionMonitoringSpec spec) {

@@ -28,15 +28,16 @@ public class KabutoSDK {
     private final long pollingInterval;
     private OkHttpClient okHttpClient;
     private ContractTransactionListener contractTransactionListener;
+    private String apiKey;
 
-    public KabutoSDK(ObjectMapper objectMapper, OkHttpClient ok, String kabutoUrl, ScheduledExecutorService scheduledExecutorService, long pollingInterval, ContractTransactionListener txListener) {
+    public KabutoSDK(ObjectMapper objectMapper, OkHttpClient ok, String kabutoUrl, ScheduledExecutorService scheduledExecutorService, long pollingInterval, ContractTransactionListener txListener, String apiKey) {
         this.okHttpClient = ok;
         this.objectMapper = objectMapper;
         this.kabutoUrl = kabutoUrl;
         this.scheduledExecutorService = scheduledExecutorService;
         this.pollingInterval = pollingInterval;
         this.contractTransactionListener = txListener;
-
+        this.apiKey = apiKey;
     }
 
     public Disposable transactionFlowable(String contractId){

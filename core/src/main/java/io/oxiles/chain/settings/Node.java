@@ -32,4 +32,5 @@ public class Node {
     private BigInteger blocksToWaitBeforeInvalidating;
     private BigInteger maxUnsyncedBlocksForFilter;
     private BigInteger syncStartBlock;
+    private String apiKey;
 }

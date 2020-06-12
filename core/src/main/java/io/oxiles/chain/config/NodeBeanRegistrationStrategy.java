@@ -2,6 +2,7 @@ package io.oxiles.chain.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.oxiles.chain.service.strategy.DragonGlassSDK;
 import lombok.AllArgsConstructor;
 import io.oxiles.chain.config.factory.ContractEventDetailsFactoryFactoryBean;
 import io.oxiles.chain.service.HashgraphService;
@@ -85,10 +86,7 @@ public class NodeBeanRegistrationStrategy {
         }
         else if(node.getChainType().equals(ChainType.HASHGRAPH)){
             //TODO: Factory  for others
-            if(node.getNodeType().equals(NodeType.KABUTO)){
-                hashgraphServiceBeanName = buildHashgraphService(registry, node);
-            }
-
+            hashgraphServiceBeanName = buildHashgraphService(registry, node);
         }
         registerNodeServicesBean(node, web3j, hashgraphServiceBeanName,  blockchainServiceBeanName, registry);
 
@@ -106,18 +104,19 @@ public class NodeBeanRegistrationStrategy {
                     EthereumNodeServices.class);
             builder.addPropertyValue("web3j", web3j)
                     .addPropertyReference("blockchainService", web3jServiceBeanName);
-        }
-        else{
-            builder = BeanDefinitionBuilder.genericBeanDefinition(
-                    HashgraphNodeServices.class);
-            builder.addPropertyReference("kabutoSDK", hashgraphServiceBeanName);
+        } else {
+            if (node.getNodeType().equals(NodeType.KABUTO)) {
+                builder = BeanDefinitionBuilder.genericBeanDefinition(
+                        HashgraphNodeServices.class);
+                builder.addPropertyReference("kabutoSDK", hashgraphServiceBeanName);
+            } else {
+                builder = BeanDefinitionBuilder.genericBeanDefinition(
+                        HashgraphNodeServices.class);
+                builder.addPropertyReference("dragonGlassSDK", hashgraphServiceBeanName);
+            }
         }
         builder.addPropertyValue("nodeName", node.getName());
-        builder.addPropertyValue("nodeType",node.getNodeType());
-
-
-
-
+        builder.addPropertyValue("nodeType", node.getNodeType());
 
         final String beanName = String.format(NODE_SERVICES_BEAN_NAME, node.getName());
         registry.registerBeanDefinition(beanName, builder.getBeanDefinition());
@@ -333,14 +332,23 @@ public class NodeBeanRegistrationStrategy {
                 .connectTimeout(node.getConnectionTimeout(),TimeUnit.MILLISECONDS)
                 .build();
 
-        final BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(
-                KabutoSDK.class);
+        final BeanDefinitionBuilder builder;
+        if(node.getNodeType().equals(NodeType.KABUTO)) {
+            builder = BeanDefinitionBuilder.genericBeanDefinition(KabutoSDK.class);
+        } else {
+            if (node.getNodeType().equals(NodeType.DRAGONGLASS)) {
+                builder = BeanDefinitionBuilder.genericBeanDefinition(DragonGlassSDK.class);
+            } else {
+                throw new UnsupportedOperationException("Hedera HashGraph type not defined");
+            }
+        }
         builder.addConstructorArgValue(objectMapper);
         builder.addConstructorArgValue(client);
         builder.addConstructorArgValue(node.getUrl());
         builder.addConstructorArgValue( Executors.newScheduledThreadPool(10));
         builder.addConstructorArgValue(node.getPollingInterval());
         builder.addConstructorArgReference("hashgraphContractTransactionListener");
+        builder.addConstructorArgValue(node.getApiKey());
 
         final String beanName = String.format(HASHGRAPH_TX_LISTENER_BEAN_NAME, node.getName());
         registry.registerBeanDefinition(beanName, builder.getBeanDefinition());

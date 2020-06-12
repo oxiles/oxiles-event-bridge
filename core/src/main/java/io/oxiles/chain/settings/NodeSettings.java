@@ -90,6 +90,8 @@ public class NodeSettings {
 
     private static final String NODE_SYNC_START_BLOCK_ATTRIBUTE = "syncStartBlock";
 
+    private static final String NODE_API_KEY = "apiKey";
+
     private static final String[] SUPPORTED_CHAINS = new String[]{ETHEREUM_CHAIN_NAME_ATTRIBUTE, HASHGRAPH_CHAIN_NAME_ATTRIBUTE};
 
     private HashMap<String, Node> nodes;
@@ -136,7 +138,8 @@ public class NodeSettings {
                         getBlocksToWaitBeforeInvalidatingProperty(environment, supportedChain, nodeIndex),
                         getBlocksToWaitForMissingTxProperty(environment, supportedChain, nodeIndex),
                         getMaxUnsyncedBlocksForFilter(environment, supportedChain, nodeIndex),
-                        getSyncStartBlock(environment, supportedChain, nodeIndex)
+                        getSyncStartBlock(environment, supportedChain, nodeIndex),
+                        getNodeApiKeyProperty(environment, supportedChain, nodeIndex)
                 );
 
                 nodes.put(nodeName, node);
@@ -343,6 +346,11 @@ public class NodeSettings {
         }
 
         return BigInteger.valueOf(Long.valueOf(syncStartBlock));
+    }
+
+    private String getNodeApiKeyProperty(Environment environment, String chainName, int index) {
+
+        return getProperty(environment, buildNodeAttribute(NODE_API_KEY, chainName, index));
     }
 
 

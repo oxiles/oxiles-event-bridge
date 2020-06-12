@@ -37,7 +37,7 @@ public class KabutoSDKTest {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         this.underTest = new KabutoSDK(objectMapper, client.newBuilder()
-                .build(),"http://api.testnet.kabuto.sh/v1", Executors.newScheduledThreadPool(1), 10000, null);
+                .build(),"http://api.testnet.kabuto.sh/v1", Executors.newScheduledThreadPool(1), 10000, null, null);
     }
 
     @Test
