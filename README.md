@@ -59,6 +59,9 @@ hashgraph:
      url: https://api.dragonglass.me/hedera/api
      apiKey: b04c8155-1cc9-3b4d-93e8-e9ee2c8e65d3
      pollingInterval: ${POLLING_INTERVAL:2000}
+   - name: hcs
+     type: MIRROR
+     url: hcs.testnet.mirrornode.hedera.com:5600
 ```
 ## Registering a Transaction Monitor
 
@@ -72,10 +75,90 @@ transactionFilters:
   type: "FROM_ADDRESS"
   transactionIdentifierValue: 0.0.46764
   statuses: ['SUCCESS']
+- nodeName: hcs
+  nodeType: MIRROR
+  type: "TOPIC"
+  transactionIdentifierValue: 0.0.65133
 ```
 
 ### Transaction Events
 When a new transaction that matches a transaction monitor is sealed / validated / mined the following json us generated:
+
+For Kabuto:
+``` 
+{
+  "_id": "5ee3b8f1bef20135030abf74",
+  "txId": "0.0.8660@1590680538.643000000",
+  "hash": "2a94c034e51169c56a227d420f0d6f55eeebcd4d9904cef26c3f12e879d3f030203f01023b997783f2c0a86c2fa54f34",
+  "validStartAt": "2020-05-28T15:42:18.643Z",
+  "consensusAt": "2020-05-28T15:42:29.695491001Z",
+  "value": "100000000000",
+  "fee": "86358909",
+  "memo": "",
+  "status": "SUCCESS",
+  "node": "0.0.3",
+  "type": "CONTRACT_CALL",
+  "operator": "0.0.8660",
+  "nodeType": "KABUTO",
+  "transfers": [
+    {
+      "account": "0.0.9469",
+      "amount": "100000000000"
+    },
+    {
+      "account": "0.0.98",
+      "amount": "81566607"
+    },
+    {
+      "account": "0.0.3",
+      "amount": "4792302"
+    },
+    {
+      "account": "0.0.8660",
+      "amount": "-100086358909"
+    }
+  ]
+}
+```
+
+For Dragonglass:
+``` 
+{
+  "_id": "5ee3b8fbbef20135030abf7d",
+  "txId": "00197831591982298888333854-SUCCESS",
+  "hash": "ad1dd41d23135c7ccefd3da7da5ed7f22ad81a07b61fb9ff532bf500cc9be8d493a35a6c6db66a130a104da89af6bfbf",
+  "validStartAt": "2020-06-12T17:18:18.888+0000",
+  "consensusAt": "2020-06-12T17:18:29.995+0000",
+  "value": "477043",
+  "fee": "387043",
+  "memo": "",
+  "status": "SUCCESS",
+  "type": "CRYPTO",
+  "nodeType": "DRAGONGLASS",
+  "transfers": [
+    {
+      "account": "0.0.8",
+      "amount": "15069"
+    },
+    {
+      "account": "0.0.98",
+      "amount": "371974"
+    },
+    {
+      "account": "0.0.14684",
+      "amount": "90000"
+    },
+    {
+      "account": "0.0.14698",
+      "amount": "-90000"
+    },
+    {
+      "account": "0.0.19783",
+      "amount": "-387043"
+    }
+  ]
+}
+```
 
 For HCS:
 ``` 

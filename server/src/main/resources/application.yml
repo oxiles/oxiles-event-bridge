@@ -34,7 +34,7 @@ hashgraph:
       type: DRAGONGLASS
       url: https://api.dragonglass.me/hedera/api
       pollingInterval: ${POLLING_INTERVAL:2000}
-      apiKey: b04c8155-1cc9-3b4d-93e8-e9ee2c8e65d3
+      apiKey: ${DRAGONGLASS_API_KEY}
     - name: hcs
       type: MIRROR
       url: hcs.testnet.mirrornode.hedera.com:5600
