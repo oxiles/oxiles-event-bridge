@@ -86,7 +86,6 @@ public class KabutoSDK {
                                 transactionList.forEach(
                                     Unchecked.consumer(tx -> {
                                         HashGraphTransactionData data = HashGraphTransactionData.factory(tx);
-                                        log.info("New Transaction id detected: {}",data.id);
                                         contractTransactionListener.onTransaction(data);
                                 }));
                             }

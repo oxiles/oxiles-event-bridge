@@ -81,7 +81,6 @@ public class DragonGlassSDK {
 
                             transactionMain.data.forEach( tx -> {
                                 HashGraphTransactionData data = HashGraphTransactionData.factory(tx);
-                                log.info("New Transaction id detected: {}",data.id);
                                 contractTransactionListener.onTransaction(data);
                             });
 
