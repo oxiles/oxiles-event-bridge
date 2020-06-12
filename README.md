@@ -74,6 +74,15 @@ transactionFilters:
 
 
 ### Transaction Events
-When a new transaction that matches a transaction monitor is sealed / validated / mined the following json us generated
+When a new transaction that matches a transaction monitor is sealed / validated / mined the following json us generated:
 
+For HCS:
+``` 
+{
+  "mirrorNode": "hcs.testnet.mirrornode.hedera.com:5600",
+  "topicId": "0.0.68412",
+  "consensusTimestamp": 1591959712.501942,
+  "message": "Oxiles HCS example message",
+  "sequenceNumber": 4
+}
 ```
