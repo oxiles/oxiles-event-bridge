@@ -1,6 +1,7 @@
 package io.oxiles.service;
 
 import io.oxiles.dto.event.ContractEventDetails;
+import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
 import io.oxiles.model.LatestBlock;
 
 import java.util.Optional;
@@ -28,4 +29,6 @@ public interface EventStoreService {
      * @return The block details
      */
     Optional<LatestBlock> getLatestBlock(String nodeName);
+
+    Optional<HCSMessageTransactionDetails> getLatestMessageFromTopic(String mirrorNode, String topicId);
 }

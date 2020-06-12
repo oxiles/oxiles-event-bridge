@@ -2,6 +2,7 @@ package io.oxiles.integration.broadcast.blockchain;
 
 import io.oxiles.dto.block.BlockDetails;
 import io.oxiles.dto.event.ContractEventDetails;
+import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
 import io.oxiles.dto.transaction.TransactionDetails;
 import lombok.extern.slf4j.Slf4j;
 import io.oxiles.chain.service.strategy.HashGraphTransactionData;
@@ -72,6 +73,17 @@ public class HttpBlockchainEventBroadcaster implements BlockchainEventBroadcaste
             }
             return null;
         });*/
+    }
+
+    @Override
+    public void broadcastMessageTransaction(HCSMessageTransactionDetails hcsMessageTransactionDetails) {
+        retryTemplate.execute((context) -> {
+            final ResponseEntity<Void> response =
+                    restTemplate.postForEntity(settings.getTransactionEventsUrl(), hcsMessageTransactionDetails, Void.class);
+
+            checkForSuccessResponse(response);
+            return null;
+        });
     }
 
     @Override

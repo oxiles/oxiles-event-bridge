@@ -10,6 +10,7 @@ import com.hedera.hashgraph.sdk.consensus.ConsensusTopicId;
 import io.oxiles.chain.service.strategy.HashGraphTransactionData;
 import io.oxiles.dto.block.BlockDetails;
 import io.oxiles.dto.event.ContractEventDetails;
+import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
 import io.oxiles.dto.message.*;
 import io.oxiles.dto.transaction.TransactionDetails;
 import io.oxiles.dto.message.*;
@@ -47,6 +48,11 @@ public class HCSBlockChainEventBroadcaster implements BlockchainEventBroadcaster
     @Override
     public void broadcastTransaction(HashGraphTransactionData hederaTransactionData) {
         this.submitMessage(hcsSettings.getTopic().getTransactionEvents(), new HashgraphTransactionEvent(hederaTransactionData));
+    }
+
+    @Override
+    public void broadcastMessageTransaction(HCSMessageTransactionDetails hcsMessageTransactionDetails) {
+        this.submitMessage(hcsSettings.getTopic().getTransactionEvents(), new HCSMessageTransactionEvent(hcsMessageTransactionDetails));
     }
 
     private void submitMessage(String topic, EventeumMessage<?> eventeumMessage) {

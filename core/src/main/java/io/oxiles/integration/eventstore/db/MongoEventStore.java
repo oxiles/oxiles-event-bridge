@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import io.oxiles.dto.event.ContractEventDetails;
+import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
 import io.oxiles.integration.eventstore.db.repository.ContractEventDetailsRepository;
+import io.oxiles.integration.eventstore.db.repository.HCSMessageTransactionDetailsRepository;
 import io.oxiles.integration.eventstore.db.repository.LatestBlockRepository;
 import io.oxiles.integration.eventstore.db.repository.TransactionDetailsRepository;
 import io.oxiles.chain.service.strategy.HashGraphTransactionData;
@@ -35,14 +37,18 @@ public class MongoEventStore implements SaveableEventStore {
 
     private TransactionDetailsRepository transactionDetailsRepository;
 
+    private HCSMessageTransactionDetailsRepository hcsMessageTransactionDetailsRepository;
+
     public MongoEventStore(
             ContractEventDetailsRepository eventDetailsRepository,
             LatestBlockRepository latestBlockRepository,
             TransactionDetailsRepository transactionDetailsRepository,
+            HCSMessageTransactionDetailsRepository hcsMessageTransactionDetailsRepository,
             MongoTemplate mongoTemplate) {
         this.eventDetailsRepository = eventDetailsRepository;
         this.latestBlockRepository = latestBlockRepository;
         this.transactionDetailsRepository = transactionDetailsRepository;
+        this.hcsMessageTransactionDetailsRepository = hcsMessageTransactionDetailsRepository;
         this.mongoTemplate = mongoTemplate;
     }
 
@@ -88,6 +94,11 @@ public class MongoEventStore implements SaveableEventStore {
     }
 
     @Override
+    public Optional<HCSMessageTransactionDetails> getLatestMessageFromTopic(String mirrorNode, String topicId) {
+        return hcsMessageTransactionDetailsRepository.findFirstByMirrorNodeAndTopicIdOrderByConsensusTimestampDesc(mirrorNode, topicId);
+    }
+
+    @Override
     public void save(ContractEventDetails contractEventDetails) {
         eventDetailsRepository.save(contractEventDetails);
     }
@@ -97,4 +108,9 @@ public class MongoEventStore implements SaveableEventStore {
 
     @Override
     public void save(HashGraphTransactionData txData) { transactionDetailsRepository.save(txData); }
+
+    @Override
+    public void save(HCSMessageTransactionDetails hcsMessageTransactionDetails) {
+        hcsMessageTransactionDetailsRepository.save(hcsMessageTransactionDetails);
+    }
 }

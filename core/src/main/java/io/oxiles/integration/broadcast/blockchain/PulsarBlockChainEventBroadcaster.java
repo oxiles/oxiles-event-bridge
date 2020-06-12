@@ -4,6 +4,7 @@ import javax.annotation.PreDestroy;
 
 import io.oxiles.dto.block.BlockDetails;
 import io.oxiles.dto.event.ContractEventDetails;
+import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
 import io.oxiles.dto.transaction.TransactionDetails;
 import io.oxiles.chain.service.strategy.HashGraphTransactionData;
 import org.apache.pulsar.client.api.ClientBuilder;
@@ -86,7 +87,12 @@ public class PulsarBlockChainEventBroadcaster implements BlockchainEventBroadcas
 		send(hashGraphTransactionDataTransactionData, transactionEventProducer);
 	}
 
-    protected Producer<byte[]> createProducer(String topic) throws PulsarClientException {
+	@Override
+	public void broadcastMessageTransaction(HCSMessageTransactionDetails hcsMessageTransactionDetails) {
+		send(hcsMessageTransactionDetails, transactionEventProducer);
+	}
+
+	protected Producer<byte[]> createProducer(String topic) throws PulsarClientException {
 		return client.newProducer()
 				.topic(topic)
 				.compressionType(CompressionType.LZ4)

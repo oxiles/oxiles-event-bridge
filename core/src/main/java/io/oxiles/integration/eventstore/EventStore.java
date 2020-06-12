@@ -1,6 +1,7 @@
 package io.oxiles.integration.eventstore;
 
 import io.oxiles.dto.event.ContractEventDetails;
+import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
 import io.oxiles.model.LatestBlock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,4 +22,8 @@ public interface EventStore {
     boolean txExistsById(String id);
 
     boolean isPagingZeroIndexed();
+
+    default Optional<HCSMessageTransactionDetails> getLatestMessageFromTopic(String mirrorNode, String topicId) {
+        return Optional.empty();
+    }
 }
