@@ -2,6 +2,8 @@ package io.oxiles.chain.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.oxiles.chain.service.HCSService;
+import io.oxiles.chain.service.container.HCSNodeServices;
 import io.oxiles.chain.service.strategy.DragonGlassSDK;
 import lombok.AllArgsConstructor;
 import io.oxiles.chain.config.factory.ContractEventDetailsFactoryFactoryBean;
@@ -67,12 +69,16 @@ public class NodeBeanRegistrationStrategy {
     private static final String HASHGRAPH_TX_LISTENER_BEAN_NAME =
             "%sHashgraphTransactionListener";
 
+    private static final String HCS_TX_LISTENER_BEAN_NAME =
+            "%sHCSTransactionListener";
+
     private NodeSettings nodeSettings;
     private OkHttpClient globalOkHttpClient;
 
     public void register(Node node, BeanDefinitionRegistry registry) {
         Web3j web3j = null;
         String hashgraphServiceBeanName = null;
+        String hcsServiceBeanName = null;
         String blockchainServiceBeanName = null;
         if(node.getChainType().equals(ChainType.ETHEREUM)){
             registerContractEventDetailsFactoryBean(node, registry);
@@ -86,9 +92,13 @@ public class NodeBeanRegistrationStrategy {
         }
         else if(node.getChainType().equals(ChainType.HASHGRAPH)){
             //TODO: Factory  for others
-            hashgraphServiceBeanName = buildHashgraphService(registry, node);
+            if (node.getNodeType().equals(NodeType.MIRROR)) {
+                hcsServiceBeanName = buildHCSService(registry, node);
+            } else {
+                hashgraphServiceBeanName = buildHashgraphService(registry, node);
+            }
         }
-        registerNodeServicesBean(node, web3j, hashgraphServiceBeanName,  blockchainServiceBeanName, registry);
+        registerNodeServicesBean(node, web3j, hashgraphServiceBeanName, hcsServiceBeanName, blockchainServiceBeanName, registry);
 
 
     }
@@ -96,6 +106,7 @@ public class NodeBeanRegistrationStrategy {
     private String registerNodeServicesBean(Node node,
                                             Web3j web3j,
                                             String hashgraphServiceBeanName,
+                                            String hcsServiceBeanName,
                                             String web3jServiceBeanName,
                                             BeanDefinitionRegistry registry) {
         final BeanDefinitionBuilder builder;
@@ -109,10 +120,14 @@ public class NodeBeanRegistrationStrategy {
                 builder = BeanDefinitionBuilder.genericBeanDefinition(
                         HashgraphNodeServices.class);
                 builder.addPropertyReference("kabutoSDK", hashgraphServiceBeanName);
-            } else {
+            } else if (node.getNodeType().equals(NodeType.DRAGONGLASS)) {
                 builder = BeanDefinitionBuilder.genericBeanDefinition(
                         HashgraphNodeServices.class);
                 builder.addPropertyReference("dragonGlassSDK", hashgraphServiceBeanName);
+            } else {
+                builder = BeanDefinitionBuilder.genericBeanDefinition(
+                        HCSNodeServices.class);
+                builder.addPropertyReference("hcsService", hcsServiceBeanName);
             }
         }
         builder.addPropertyValue("nodeName", node.getName());
@@ -314,7 +329,6 @@ public class NodeBeanRegistrationStrategy {
         }
     }
 
-
     private String buildHashgraphService(BeanDefinitionRegistry registry, Node node) {
 
         CookieManager cookieManager = new CookieManager();
@@ -368,6 +382,18 @@ public class NodeBeanRegistrationStrategy {
 
         return beanName;
 
+    }
+
+    private String buildHCSService(BeanDefinitionRegistry registry, Node node) {
+        final BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(HCSService.class);
+        builder.addConstructorArgReference("hcsMessageTransactionListener");
+        builder.addConstructorArgReference("defaultEventStoreService");
+        builder.addConstructorArgValue(node.getUrl());
+
+        final String beanName = String.format(HCS_TX_LISTENER_BEAN_NAME, node.getName());
+        registry.registerBeanDefinition(beanName, builder.getBeanDefinition());
+
+        return beanName;
     }
 
 }

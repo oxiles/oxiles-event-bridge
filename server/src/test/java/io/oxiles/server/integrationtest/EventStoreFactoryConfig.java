@@ -7,6 +7,7 @@ import java.util.Optional;
 import io.oxiles.chain.service.strategy.HashGraphTransactionData;
 import io.oxiles.dto.block.BlockDetails;
 import io.oxiles.dto.event.ContractEventDetails;
+import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
 import io.oxiles.dto.transaction.TransactionDetails;
 import io.oxiles.factory.EventStoreFactory;
 import io.oxiles.integration.broadcast.blockchain.BlockchainEventBroadcaster;
@@ -38,6 +39,11 @@ public class EventStoreFactoryConfig {
 
             @Override
             public void onTransactionEvent(TransactionDetails transactionDetails) {
+                //DO NOTHING
+            }
+
+            @Override
+            public void onTransactionEvent(HCSMessageTransactionDetails hcsMessageTransactionDetails) {
                 //DO NOTHING
             }
         });
@@ -84,8 +90,9 @@ public class EventStoreFactoryConfig {
                     }
 
                     @Override
-                    public boolean txExistsById(String id) {
-                        return savedTxs().getEntities().stream().anyMatch(tx-> tx.getId().equals(id));
+                    public boolean txExistsByHashAndNodeType(String hash, String nodeType) {
+                        return savedTxs().getEntities().stream().anyMatch(tx->
+                                tx.getHash().equals(hash) && tx.getNodeType().equals(nodeType));
                     }
                 };
             }

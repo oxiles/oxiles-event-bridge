@@ -2,6 +2,7 @@ package io.oxiles.integration.eventstore;
 
 import io.oxiles.dto.event.ContractEventDetails;
 import io.oxiles.chain.service.strategy.HashGraphTransactionData;
+import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
 import io.oxiles.model.LatestBlock;
 
 /**
@@ -15,4 +16,8 @@ public interface SaveableEventStore extends EventStore {
     void save(LatestBlock latestBlock);
 
     void save(HashGraphTransactionData transactionData);
+
+    default void save(HCSMessageTransactionDetails hcsMessageTransactionDetails) {
+        // Do nothing
+    }
 }

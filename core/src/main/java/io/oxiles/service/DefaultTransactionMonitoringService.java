@@ -2,6 +2,7 @@ package io.oxiles.service;
 
 import io.oxiles.chain.block.tx.criteria.TransactionMatchingCriteria;
 import io.oxiles.chain.factory.TransactionDetailsFactory;
+import io.oxiles.chain.service.container.HCSNodeServices;
 import io.oxiles.chain.service.container.NodeServices;
 import io.oxiles.integration.broadcast.blockchain.BlockchainEventBroadcaster;
 import lombok.Data;
@@ -138,6 +139,8 @@ public class DefaultTransactionMonitoringService implements TransactionMonitorin
                 ((HashgraphNodeServices) nodeServices).getKabutoSDK().transactionFlowable(spec.getTransactionIdentifierValue());
             } else if (nodeServices.getNodeType().equals(NodeType.DRAGONGLASS)) {
                 ((HashgraphNodeServices) nodeServices).getDragonGlassSDK().transactionFlowable(spec.getTransactionIdentifierValue());
+            } else if(nodeServices.getNodeType().equals(NodeType.MIRROR)){
+                ((HCSNodeServices)nodeServices).getHcsService().subscribeToTopic(spec.getTransactionIdentifierValue());
             }
 
             transactionMonitors.put(spec.getId(), new TransactionMonitor(spec, matchingCriteria));

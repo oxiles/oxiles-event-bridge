@@ -2,6 +2,7 @@ package io.oxiles.server.integrationtest;
 
 import io.oxiles.dto.block.BlockDetails;
 import io.oxiles.dto.event.ContractEventDetails;
+import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
 import io.oxiles.dto.transaction.TransactionDetails;
 import io.oxiles.integration.broadcast.blockchain.BlockchainEventBroadcaster;
 import io.oxiles.integration.broadcast.blockchain.ListenerInvokingBlockchainEventBroadcaster;
@@ -48,6 +49,8 @@ public class ListenerBackedBroadcasterIT extends BroadcasterSmokeTest {
 
         private static List<TransactionDetails> broadcastTransactionMessages = new ArrayList<>();
 
+        private static List<HCSMessageTransactionDetails> broadcastMessageTransactionMessages = new ArrayList<>();
+
         @Bean
         public BlockchainEventBroadcaster listenerBroadcaster() {
 
@@ -65,6 +68,11 @@ public class ListenerBackedBroadcasterIT extends BroadcasterSmokeTest {
                 @Override
                 public void onTransactionEvent(TransactionDetails transactionDetails) {
                     broadcastTransactionMessages.add(transactionDetails);
+                }
+
+                @Override
+                public void onTransactionEvent(HCSMessageTransactionDetails hcsMessageTransactionDetails) {
+                    broadcastMessageTransactionMessages.add(hcsMessageTransactionDetails);
                 }
             });
         }

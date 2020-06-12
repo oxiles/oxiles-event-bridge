@@ -1,6 +1,6 @@
 FROM openjdk:8-jre
-ADD target/eventeum-server.jar eventeum-server.jar
-ADD docker-scripts/start-eventeum.sh start-eventeum.sh
+ADD target/oxiles-server.jar oxiles-server.jar
+ADD docker-scripts/start-oxiles.sh start-oxiles.sh
 ENV CONF ""
 EXPOSE 8060
-CMD chmod +x start-eventeum.sh && ./start-eventeum.sh
+CMD chmod +x start-oxiles.sh && ./start-oxiles.sh

@@ -2,6 +2,7 @@ package io.oxiles.integration.broadcast.blockchain;
 
 import io.oxiles.dto.block.BlockDetails;
 import io.oxiles.dto.event.ContractEventDetails;
+import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
 import io.oxiles.dto.message.*;
 import io.oxiles.dto.transaction.TransactionDetails;
 import io.oxiles.dto.message.*;
@@ -61,6 +62,14 @@ public class KafkaBlockchainEventBroadcaster implements BlockchainEventBroadcast
 
         kafkaTemplate.send(kafkaSettings.getTransactionEventsTopic(), hashGraphTransactionData.getHash(), message);
 
+    }
+
+    @Override
+    public void broadcastMessageTransaction(HCSMessageTransactionDetails hcsMessageTransactionDetails) {
+        final EventeumMessage<HCSMessageTransactionDetails> message = new HCSMessageTransactionEvent(hcsMessageTransactionDetails);
+        LOG.info("Sending transaction event message: " + JSON.stringify(message));
+
+        kafkaTemplate.send(kafkaSettings.getTransactionEventsTopic(), Integer.valueOf(hcsMessageTransactionDetails.hashCode()).toString(), message);
     }
 
     @Override

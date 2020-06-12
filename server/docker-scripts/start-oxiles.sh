@@ -1,6 +1,6 @@
 #!/bin/bash
 
-command="java -jar eventeum-server.jar"
+command="java -jar oxiles-server.jar"
 if [[ -z CONF ]]; then
   command="$command --spring.config.additional-location=$CONF"
 fi

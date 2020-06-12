@@ -4,6 +4,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import io.oxiles.dto.block.BlockDetails;
 import io.oxiles.dto.event.ContractEventDetails;
+import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
 import io.oxiles.dto.transaction.TransactionDetails;
 import io.oxiles.chain.service.strategy.HashGraphTransactionData;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -28,6 +29,8 @@ public class EventBroadcasterWrapper implements BlockchainEventBroadcaster {
 
     private Cache<Integer, TransactionDetails> transactionDetailsCache;
 
+    private Cache<Integer, HCSMessageTransactionDetails> hcsMessageTransactionDetailsCache;
+
     private Long expirationTimeMillis;
 
     private BlockchainEventBroadcaster wrapped;
@@ -40,6 +43,7 @@ public class EventBroadcasterWrapper implements BlockchainEventBroadcaster {
         this.expirationTimeMillis = expirationTimeMillis;
         this.contractEventCache = createCache(ContractEventDetails.class);
         this.transactionCache = createCache(TransactionDetails.class);
+        this.hcsMessageTransactionDetailsCache = createCache(HCSMessageTransactionDetails.class);
         this.wrapped = toWrap;
         this.enableBlockNotifications = enableBlockNotifications;
     }
@@ -81,10 +85,21 @@ public class EventBroadcasterWrapper implements BlockchainEventBroadcaster {
         }
     }
 
+    @Override
+    public void broadcastMessageTransaction(HCSMessageTransactionDetails hcsMessageTransactionDetails) {
+        synchronized (this) {
+            if (hcsMessageTransactionDetailsCache.getIfPresent(hcsMessageTransactionDetails.hashCode()) == null) {
+                hcsMessageTransactionDetailsCache.put(hcsMessageTransactionDetails.hashCode(), hcsMessageTransactionDetails);
+                wrapped.broadcastMessageTransaction(hcsMessageTransactionDetails);
+            }
+        }
+    }
+
     @Scheduled(fixedRateString = "${broadcaster.cache.expirationMillis}")
     public void cleanUpCache() {
         contractEventCache.cleanUp();
         transactionCache.cleanUp();
+        hcsMessageTransactionDetailsCache.cleanUp();
     }
 
     protected <T> Cache<Integer, T> createCache(Class<T> clazz) {

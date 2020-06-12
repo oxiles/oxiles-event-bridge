@@ -55,12 +55,12 @@ public class DragonGlassSDK {
         }, BackpressureStrategy.BUFFER);
     }
 
-    private <T> void run(FlowableEmitter<? super T> emitter, String contractiId) {
+    private <T> void run(FlowableEmitter<? super T> emitter, String contractId) {
 
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             try {
                 HttpUrl.Builder urlBuilder = HttpUrl.parse(dragonGlassUrl + "/transactions").newBuilder();
-                urlBuilder.addQueryParameter("contractId", contractiId);
+                urlBuilder.addQueryParameter("contractID", contractId);
                 String url = urlBuilder.build().toString();
 
 

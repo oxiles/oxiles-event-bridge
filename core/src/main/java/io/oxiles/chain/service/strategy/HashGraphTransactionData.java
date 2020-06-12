@@ -1,15 +1,13 @@
 package io.oxiles.chain.service.strategy;
 
+import io.oxiles.chain.settings.NodeType;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +18,7 @@ import java.util.List;
 public class HashGraphTransactionData {
     static public HashGraphTransactionData factory(KabutoTransactionData data) {
         HashGraphTransactionData hashGraph = new HashGraphTransactionData();
-        hashGraph.id = data.id;
+        hashGraph.txId = data.id;
         hashGraph.hash = data.hash;
         hashGraph.validStartAt = data.validStartAt;
         hashGraph.consensusAt = data.consensusAt;
@@ -31,6 +29,7 @@ public class HashGraphTransactionData {
         hashGraph.node = data.node;
         hashGraph.type = data.type;
         hashGraph.operator = data.operator;
+        hashGraph.nodeType = NodeType.KABUTO.getNodeType();
         hashGraph.transfers = new ArrayList<HashGraphTransactionTransfer>();
         for (int cont = 0; cont < data.transfers.size(); cont++) {
             hashGraph.transfers.add(HashGraphTransactionTransfer.factory(data.transfers.get(cont)));
@@ -39,7 +38,7 @@ public class HashGraphTransactionData {
     }
     static public HashGraphTransactionData factory(DragonGlassTransactionData data) {
         HashGraphTransactionData hashGraph = new HashGraphTransactionData();
-        hashGraph.id = data.id;
+        hashGraph.txId = data.id;
         hashGraph.hash = data.transactionHash;
         hashGraph.validStartAt = data.startTime;
         hashGraph.consensusAt = data.consensusTime;
@@ -50,17 +49,22 @@ public class HashGraphTransactionData {
         hashGraph.node = data.nodeId;
         hashGraph.type = data.serviceType;
         hashGraph.operator = data.payerId;
+        hashGraph.nodeType = NodeType.DRAGONGLASS.getNodeType();
         hashGraph.transfers = new ArrayList<HashGraphTransactionTransfer>();
         for (int cont = 0; cont < data.transfers.size(); cont++) {
             hashGraph.transfers.add(HashGraphTransactionTransfer.factory(data.transfers.get(cont)));
         }
         return hashGraph;
     }
+
     @Getter
     @Setter
     @Id
-    @org.springframework.data.annotation.Id
+    @GeneratedValue
     String id;
+    @Getter
+    @Setter
+    String txId;
     @Getter
     @Setter
     String hash;
@@ -91,6 +95,9 @@ public class HashGraphTransactionData {
     @Getter
     @Setter
     String operator;
+    @Getter
+    @Setter
+    String nodeType;
     @Getter
     @Setter
     @Lob
