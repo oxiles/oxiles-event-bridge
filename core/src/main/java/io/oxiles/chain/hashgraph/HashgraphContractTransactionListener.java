@@ -18,9 +18,9 @@ public class HashgraphContractTransactionListener implements ContractTransaction
 
     @Override
     public void onTransaction(HashGraphTransactionData txData) {
-        if (!eventStore.txExistsById(txData.getId())) {
+        if (!eventStore.txExistsByHashAndNodeType(txData.getHash(), txData.getNodeType())) {
             //broadcasting
-            log.info("New Transaction id detected: {}",txData.getId());
+            log.info("New Transaction id detected: {}, {}", txData.getNodeType(), txData.getHash());
             eventBroadcaster.broadcastTransaction(txData);
             if (eventStore instanceof SaveableEventStore){
                 ((SaveableEventStore)eventStore).save(txData);

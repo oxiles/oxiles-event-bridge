@@ -19,7 +19,7 @@ public interface EventStore {
 
     Optional<LatestBlock> getLatestBlockForNode(String nodeName);
 
-    boolean txExistsById(String id);
+    boolean txExistsByHashAndNodeType(String hash, String nodeType);
 
     boolean isPagingZeroIndexed();
 

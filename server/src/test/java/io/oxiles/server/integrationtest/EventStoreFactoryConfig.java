@@ -90,8 +90,9 @@ public class EventStoreFactoryConfig {
                     }
 
                     @Override
-                    public boolean txExistsById(String id) {
-                        return savedTxs().getEntities().stream().anyMatch(tx-> tx.getId().equals(id));
+                    public boolean txExistsByHashAndNodeType(String hash, String nodeType) {
+                        return savedTxs().getEntities().stream().anyMatch(tx->
+                                tx.getHash().equals(hash) && tx.getNodeType().equals(nodeType));
                     }
                 };
             }

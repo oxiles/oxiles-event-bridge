@@ -89,8 +89,8 @@ public class MongoEventStore implements SaveableEventStore {
     }
 
     @Override
-    public boolean txExistsById(String id) {
-        return transactionDetailsRepository.existsById(id);
+    public boolean txExistsByHashAndNodeType(String hash, String nodeType) {
+        return transactionDetailsRepository.existsByHashAndNodeType(hash, nodeType);
     }
 
     @Override
