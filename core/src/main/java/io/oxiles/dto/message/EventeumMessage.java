@@ -3,6 +3,7 @@ package io.oxiles.dto.message;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.oxiles.chain.service.strategy.HashGraphTokenTransferData;
 import net.consensys.kafkadl.message.RetryableMessage;
 
 /**
@@ -25,7 +26,8 @@ import net.consensys.kafkadl.message.RetryableMessage;
         @JsonSubTypes.Type(value = ContractEventFilterRemoved.class, name = ContractEventFilterRemoved.TYPE),
         @JsonSubTypes.Type(value = TransactionMonitorAdded.class, name = TransactionMonitorAdded.TYPE),
         @JsonSubTypes.Type(value = TransactionMonitorRemoved.class, name = TransactionMonitorRemoved.TYPE),
-        @JsonSubTypes.Type(value = HashgraphTransactionEvent.class, name = HashgraphTransactionEvent.TYPE)
+        @JsonSubTypes.Type(value = HashgraphTransactionEvent.class, name = HashgraphTransactionEvent.TYPE),
+        @JsonSubTypes.Type(value = HashGraphTokenTransferData.class, name = HashgraphTokenTransferEvent.TYPE)
 })
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public interface EventeumMessage<T> extends RetryableMessage {

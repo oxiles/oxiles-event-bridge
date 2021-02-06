@@ -21,6 +21,8 @@ public interface EventStore {
 
     boolean txExistsByHashAndNodeType(String hash, String nodeType);
 
+    boolean transferExistsByHashAndNodeType(String hash, String nodeType);
+
     boolean isPagingZeroIndexed();
 
     default Optional<HCSMessageTransactionDetails> getLatestMessageFromTopic(String mirrorNode, String topicId) {

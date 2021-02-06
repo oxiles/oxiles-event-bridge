@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.oxiles.chain.service.strategy.HashGraphTokenTransferData;
 import io.oxiles.chain.service.strategy.HashGraphTransactionData;
 import io.oxiles.dto.block.BlockDetails;
 import io.oxiles.dto.event.ContractEventDetails;
 import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
+import io.oxiles.dto.message.HashgraphTokenTransferEvent;
 import io.oxiles.dto.transaction.TransactionDetails;
 import io.oxiles.factory.EventStoreFactory;
 import io.oxiles.integration.broadcast.blockchain.BlockchainEventBroadcaster;
@@ -74,6 +76,14 @@ public class EventStoreFactoryConfig {
                     }
 
                     @Override
+                    public void save(HashGraphTokenTransferData txData) {
+                        savedTransfers().getEntities().clear();
+                        savedTransfers().getEntities().add(txData);
+                    }
+
+
+
+                    @Override
                     public Page<ContractEventDetails> getContractEventsForSignature(
                             String eventSignature, String contractAddress, PageRequest pagination) {
                         return null;
@@ -93,6 +103,12 @@ public class EventStoreFactoryConfig {
                     public boolean txExistsByHashAndNodeType(String hash, String nodeType) {
                         return savedTxs().getEntities().stream().anyMatch(tx->
                                 tx.getHash().equals(hash) && tx.getNodeType().equals(nodeType));
+                    }
+
+                    @Override
+                    public boolean transferExistsByHashAndNodeType(String hash, String nodeType) {
+                        return savedTransfers().getEntities().stream().anyMatch(tx->
+                                tx.getTransactionId().equals(hash) && tx.getNodeType().equals(nodeType));
                     }
                 };
             }
@@ -119,6 +135,11 @@ public class EventStoreFactoryConfig {
 
     @Bean
     Entities<HashGraphTransactionData> savedTxs() {
+        return new Entities<>();
+    }
+
+    @Bean
+    Entities<HashGraphTokenTransferData> savedTransfers() {
         return new Entities<>();
     }
 

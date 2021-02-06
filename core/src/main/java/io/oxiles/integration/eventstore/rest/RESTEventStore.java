@@ -52,4 +52,9 @@ public class RESTEventStore implements EventStore {
     public boolean txExistsByHashAndNodeType(String hash, String nodeType) {
         return false;
     }
+
+    @Override
+    public boolean transferExistsByHashAndNodeType(String hash, String nodeType) {
+        return false;
+    }
 }

@@ -16,4 +16,8 @@ public class HttpBroadcasterSettings {
 
     @Value("${broadcaster.http.transactionEventsUrl:}")
     private String transactionEventsUrl;
+
+
+    @Value("${broadcaster.http.tokenTranaferEventsUrl:}")
+    private String tokenTranaferEventsUrl;
 }

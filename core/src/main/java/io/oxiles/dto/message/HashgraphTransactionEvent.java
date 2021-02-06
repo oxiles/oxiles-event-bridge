@@ -1,5 +1,6 @@
 package io.oxiles.dto.message;
 
+import io.oxiles.chain.service.strategy.HashGraphTokenTransferData;
 import io.oxiles.chain.service.strategy.HashGraphTransactionData;
 import lombok.NoArgsConstructor;
 

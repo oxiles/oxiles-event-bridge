@@ -5,6 +5,7 @@ import io.oxiles.chain.factory.TransactionDetailsFactory;
 import io.oxiles.chain.service.container.HCSNodeServices;
 import io.oxiles.chain.service.container.NodeServices;
 import io.oxiles.integration.broadcast.blockchain.BlockchainEventBroadcaster;
+import io.oxiles.model.TransactionIdentifierType;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -138,7 +139,13 @@ public class DefaultTransactionMonitoringService implements TransactionMonitorin
             } else if (nodeServices.getNodeType().equals(NodeType.KABUTO)) {
                 ((HashgraphNodeServices) nodeServices).getKabutoSDK().transactionFlowable(spec.getTransactionIdentifierValue());
             } else if (nodeServices.getNodeType().equals(NodeType.DRAGONGLASS)) {
-                ((HashgraphNodeServices) nodeServices).getDragonGlassSDK().transactionFlowable(spec.getTransactionIdentifierValue());
+                if(spec.getType().equals(TransactionIdentifierType.FROM_ADDRESS)) {
+                    ((HashgraphNodeServices) nodeServices).getDragonGlassSDK().transactionFlowable(spec.getTransactionIdentifierValue());
+                }
+                if(spec.getType().equals(TransactionIdentifierType.FROM_TOKEN)) {
+                    ((HashgraphNodeServices) nodeServices).getDragonGlassSDK().tokenTransferFlowable(spec.getTransactionIdentifierValue());
+                }
+
             } else if(nodeServices.getNodeType().equals(NodeType.MIRROR)){
                 ((HCSNodeServices)nodeServices).getHcsService().subscribeToTopic(spec.getTransactionIdentifierValue());
             }

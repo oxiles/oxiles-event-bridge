@@ -22,9 +22,15 @@ public class DefaultTransactionMatchingCriteriaFactory implements TransactionMat
             return new FromAddressMatchingCriteria(spec.getNodeName(), spec.getTransactionIdentifierValue(), spec.getStatuses());
         }
 
+        if (spec.getType() == TransactionIdentifierType.FROM_TOKEN) {
+            return new TokenMatchingCriteria(spec.getNodeName(), spec.getTransactionIdentifierValue(), spec.getStatuses());
+        }
+
         if (spec.getType() == TransactionIdentifierType.TOPIC) {
             return new TopicMatchingCriteria(spec.getNodeName(), spec.getTransactionIdentifierValue(), spec.getStatuses());
         }
+
+
 
         throw new UnsupportedOperationException("Type: " + spec.getType() + " not currently supported");
     }

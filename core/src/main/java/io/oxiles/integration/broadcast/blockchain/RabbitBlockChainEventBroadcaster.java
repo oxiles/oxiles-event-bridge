@@ -1,5 +1,6 @@
 package io.oxiles.integration.broadcast.blockchain;
 
+import io.oxiles.chain.service.strategy.HashGraphTokenTransferData;
 import io.oxiles.dto.block.BlockDetails;
 import io.oxiles.dto.event.ContractEventDetails;
 import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
@@ -79,11 +80,17 @@ public class RabbitBlockChainEventBroadcaster implements BlockchainEventBroadcas
         );
     }
 
+
+
     @Override
     public void broadcastTransaction(HashGraphTransactionData hashGraphTransactionData) {
 
     }
 
+    @Override
+    public void broadcastTransaction(HashGraphTokenTransferData hashGraphTransactionData) {
+
+    }
     @Override
     public void broadcastMessageTransaction(HCSMessageTransactionDetails hcsMessageTransactionDetails) {
         final EventeumMessage<HCSMessageTransactionDetails> message = new HCSMessageTransactionEvent(hcsMessageTransactionDetails);

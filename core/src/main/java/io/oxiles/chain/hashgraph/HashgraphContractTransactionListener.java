@@ -1,5 +1,6 @@
 package io.oxiles.chain.hashgraph;
 
+import io.oxiles.chain.service.strategy.HashGraphTokenTransferData;
 import io.oxiles.chain.service.strategy.HashGraphTransactionData;
 import io.oxiles.integration.broadcast.blockchain.BlockchainEventBroadcaster;
 import io.oxiles.integration.eventstore.EventStore;
@@ -27,4 +28,16 @@ public class HashgraphContractTransactionListener implements ContractTransaction
             }
         }
     }
+    @Override
+    public void onTransaction(HashGraphTokenTransferData txData) {
+        if (!eventStore.transferExistsByHashAndNodeType(txData.getTransactionId(), txData.getNodeType())) {
+            //broadcasting
+            log.info("New Token transferndetected: {}, {}", txData.getNodeType(), txData.getTransactionId());
+            eventBroadcaster.broadcastTransaction(txData);
+            if (eventStore instanceof SaveableEventStore){
+                ((SaveableEventStore)eventStore).save(txData);
+            }
+        }
+    }
+
 }

@@ -7,16 +7,15 @@ import com.hedera.hashgraph.sdk.HederaNetworkException;
 import com.hedera.hashgraph.sdk.HederaStatusException;
 import com.hedera.hashgraph.sdk.consensus.ConsensusMessageSubmitTransaction;
 import com.hedera.hashgraph.sdk.consensus.ConsensusTopicId;
+import io.oxiles.chain.service.strategy.HashGraphTokenTransferData;
 import io.oxiles.chain.service.strategy.HashGraphTransactionData;
 import io.oxiles.dto.block.BlockDetails;
 import io.oxiles.dto.event.ContractEventDetails;
 import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
 import io.oxiles.dto.message.*;
 import io.oxiles.dto.transaction.TransactionDetails;
-import io.oxiles.dto.message.*;
 import io.oxiles.integration.HCSSettings;
 import io.oxiles.integration.broadcast.BroadcastException;
-import io.oxiles.dto.message.*;
 
 public class HCSBlockChainEventBroadcaster implements BlockchainEventBroadcaster {
 
@@ -48,6 +47,12 @@ public class HCSBlockChainEventBroadcaster implements BlockchainEventBroadcaster
     @Override
     public void broadcastTransaction(HashGraphTransactionData hederaTransactionData) {
         this.submitMessage(hcsSettings.getTopic().getTransactionEvents(), new HashgraphTransactionEvent(hederaTransactionData));
+    }
+
+
+    @Override
+    public void broadcastTransaction(HashGraphTokenTransferData hashGraphTokenTransferData) {
+        this.submitMessage(hcsSettings.getTopic().getTransactionEvents(), new HashgraphTokenTransferEvent(hashGraphTokenTransferData));
     }
 
     @Override

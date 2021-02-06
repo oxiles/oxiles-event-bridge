@@ -48,14 +48,30 @@ public class DragonGlassSDK {
         });
     }
 
+    public Disposable tokenTransferFlowable(String tokenId){
+        return dragonGlassTokenTransferFlowable(tokenId).subscribe(response -> {
+            response.forEach( transactionData -> {
+                log.info(transactionData.id);
+            });
+        });
+    }
+
+
     private Flowable<List<DragonGlassTransactionData>> dragonGlassTransactionFlowable(String contractId) {
         return Flowable.create((subscriber) -> {
             subscriber.getClass();
-            this.run(subscriber, contractId);
+            this.runTransaction(subscriber, contractId);
         }, BackpressureStrategy.BUFFER);
     }
 
-    private <T> void run(FlowableEmitter<? super T> emitter, String contractId) {
+    private Flowable<List<DragonGlassTransactionData>> dragonGlassTokenTransferFlowable(String tokenId) {
+        return Flowable.create((subscriber) -> {
+            subscriber.getClass();
+            this.runTokenTransfer(subscriber, tokenId);
+        }, BackpressureStrategy.BUFFER);
+    }
+
+    private <T> void runTransaction(FlowableEmitter<? super T> emitter, String contractId) {
 
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             try {
@@ -85,6 +101,58 @@ public class DragonGlassSDK {
                             });
 
                             return  transactionMain.data;
+
+                        }
+
+                        if (response.code() == 400) {
+                            log.error("Invalid request");
+                            return null;
+
+                        }
+
+                        throw new Exception("Invalid Request");
+
+                    }
+
+                }).get();
+            } catch (Throwable var3) {
+                log.error("Error sending request", var3);
+            }
+
+        }, 0L, pollingInterval, TimeUnit.MILLISECONDS);
+    }
+
+
+    private <T> void runTokenTransfer(FlowableEmitter<? super T> emitter, String tokenId) {
+
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
+            try {
+                HttpUrl.Builder urlBuilder = HttpUrl.parse(dragonGlassUrl + "/hts/tokens/" + tokenId + "/transfers").newBuilder();
+                // urlBuilder.addQueryParameter("contractID", contractId);
+                String url = urlBuilder.build().toString();
+
+
+                Request request = new Request.Builder()
+                        .url(url)
+                        .addHeader("X-API-KEY", apiKey)
+                        .get()
+                        .build();
+
+                Unchecked.supplier(() -> {
+
+                    try (Response response = this.okHttpClient.newCall(request).execute()) {
+
+                        if (response.code() == 200) {
+
+                            DragonGlassTokenTransferMain tokenTransferMain = this.objectMapper.reader().forType( new TypeReference<DragonGlassTokenTransferMain>
+                                    (){}).withoutRootName().readValue(response.body().string());
+
+                            tokenTransferMain.data.forEach( tx -> {
+                                HashGraphTokenTransferData data = HashGraphTokenTransferData.factory(tx);
+                                contractTransactionListener.onTransaction(data);
+                            });
+
+                            return  tokenTransferMain.data;
 
                         }
 

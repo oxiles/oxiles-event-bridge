@@ -1,5 +1,6 @@
 package io.oxiles.chain.hashgraph;
 
+import io.oxiles.chain.service.strategy.HashGraphTokenTransferData;
 import io.oxiles.chain.service.strategy.HashGraphTransactionData;
 
 public interface ContractTransactionListener {
@@ -10,4 +11,6 @@ public interface ContractTransactionListener {
      * @param txData The new transaction Data
      */
     void onTransaction(HashGraphTransactionData txData);
+
+    void onTransaction(HashGraphTokenTransferData txData);
 }

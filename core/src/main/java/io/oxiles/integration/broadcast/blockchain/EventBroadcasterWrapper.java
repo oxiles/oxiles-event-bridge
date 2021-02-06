@@ -2,6 +2,7 @@ package io.oxiles.integration.broadcast.blockchain;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import io.oxiles.chain.service.strategy.HashGraphTokenTransferData;
 import io.oxiles.dto.block.BlockDetails;
 import io.oxiles.dto.event.ContractEventDetails;
 import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
@@ -84,6 +85,15 @@ public class EventBroadcasterWrapper implements BlockchainEventBroadcaster {
             wrapped.broadcastTransaction(hashGraphTransactionData);
         }
     }
+
+    @Override
+    public void broadcastTransaction(HashGraphTokenTransferData hashGraphTokenTransferData) {
+        synchronized (this) {
+            //No cache is needed, its on db
+            wrapped.broadcastTransaction(hashGraphTokenTransferData);
+        }
+    }
+
 
     @Override
     public void broadcastMessageTransaction(HCSMessageTransactionDetails hcsMessageTransactionDetails) {

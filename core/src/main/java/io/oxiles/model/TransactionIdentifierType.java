@@ -8,5 +8,7 @@ public enum TransactionIdentifierType {
 
     FROM_ADDRESS,
 
-    TOPIC
+    TOPIC,
+
+    FROM_TOKEN
 }

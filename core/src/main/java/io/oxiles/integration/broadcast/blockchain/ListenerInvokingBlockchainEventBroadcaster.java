@@ -1,5 +1,6 @@
 package io.oxiles.integration.broadcast.blockchain;
 
+import io.oxiles.chain.service.strategy.HashGraphTokenTransferData;
 import io.oxiles.dto.block.BlockDetails;
 import io.oxiles.dto.event.ContractEventDetails;
 import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
@@ -29,6 +30,11 @@ import io.oxiles.chain.service.strategy.HashGraphTransactionData;
 
     @Override
     public void broadcastTransaction(HashGraphTransactionData txData) {
+
+    }
+
+    @Override
+    public void broadcastTransaction(HashGraphTokenTransferData txData) {
 
     }
 

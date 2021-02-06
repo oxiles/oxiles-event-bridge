@@ -1,5 +1,6 @@
 package io.oxiles.integration.broadcast.blockchain;
 
+import io.oxiles.chain.service.strategy.HashGraphTokenTransferData;
 import io.oxiles.dto.block.BlockDetails;
 import io.oxiles.dto.event.ContractEventDetails;
 import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
@@ -74,6 +75,24 @@ public class HttpBlockchainEventBroadcaster implements BlockchainEventBroadcaste
             return null;
         });*/
     }
+
+    @Override
+    public void broadcastTransaction(HashGraphTokenTransferData hashGraphTokenTransferData) {
+        retryTemplate.execute((context) -> {
+            try {
+                final ResponseEntity<Void> response =
+                        restTemplate.postForEntity(settings.getTokenTranaferEventsUrl(), hashGraphTokenTransferData, Void.class);
+
+                checkForSuccessResponse(response);
+            }
+            catch (Exception e){
+                log.error("Error sending request",e);
+                throw e;
+            }
+            return null;
+        });
+    }
+
 
     @Override
     public void broadcastMessageTransaction(HCSMessageTransactionDetails hcsMessageTransactionDetails) {

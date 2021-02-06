@@ -2,6 +2,7 @@ package io.oxiles.chain.service;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.oxiles.chain.hashgraph.ContractTransactionListener;
 import io.oxiles.chain.service.strategy.DragonGlassSDK;
 import okhttp3.OkHttpClient;
 import org.junit.Before;
@@ -12,9 +13,12 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 
+import static org.mockito.Mockito.*;
+
 public class DragonGlassSDKTest {
 
     private DragonGlassSDK underTest;
+    ContractTransactionListener txListener;
 
     @Before
     public void init() throws IOException {
@@ -27,17 +31,30 @@ public class DragonGlassSDKTest {
         objectMapper.configure(DeserializationFeature.UNWRAP_ROOT_VALUE, false);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
+        txListener = mock(ContractTransactionListener.class);
+
         this.underTest = new DragonGlassSDK(objectMapper, client.newBuilder().build(),"https://api.dragonglass.me/hedera/api",
-                Executors.newScheduledThreadPool(1), 10000, null, "b04c8155-1cc9-3b4d-93e8-e9ee2c8e65d3");
+                Executors.newScheduledThreadPool(1), 10000, txListener, "b611ab4e-37ef-3dc7-9831-a01091d6a2e5");
+
     }
 
     @Test
-    public void testDragonGlass() throws  InterruptedException {
+    public void testDragonGlassTransaction() throws  InterruptedException {
 
         underTest.transactionFlowable("0.0.46764");
-        Thread.sleep(20000);
+        Thread.sleep(10000);
+        verify(txListener, atLeastOnce());
+
     }
 
+
+    @Test
+    public void testDragonGlassTokenTransfer() throws  InterruptedException {
+
+        underTest.tokenTransferFlowable("0.0.107612");
+        Thread.sleep(20000);
+        verify(txListener, atLeastOnce());
+    }
 
 
 }

@@ -2,6 +2,7 @@ package io.oxiles.integration.broadcast.blockchain;
 
 import javax.annotation.PreDestroy;
 
+import io.oxiles.chain.service.strategy.HashGraphTokenTransferData;
 import io.oxiles.dto.block.BlockDetails;
 import io.oxiles.dto.event.ContractEventDetails;
 import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
@@ -86,6 +87,12 @@ public class PulsarBlockChainEventBroadcaster implements BlockchainEventBroadcas
 	public void broadcastTransaction(HashGraphTransactionData hashGraphTransactionDataTransactionData) {
 		send(hashGraphTransactionDataTransactionData, transactionEventProducer);
 	}
+	@Override
+	public void broadcastTransaction(HashGraphTokenTransferData hashGraphTokenTransferData) {
+		send(hashGraphTokenTransferData, transactionEventProducer);
+	}
+
+
 
 	@Override
 	public void broadcastMessageTransaction(HCSMessageTransactionDetails hcsMessageTransactionDetails) {

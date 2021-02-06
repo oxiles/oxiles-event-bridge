@@ -59,14 +59,10 @@ hashgraph:
 #      index: 2
 
 transactionFilters:
-- nodeName: kabuto
-  type: "FROM_ADDRESS"
-  transactionIdentifierValue: 0.0.46764
-  statuses: ['FAILED']
+
 - nodeName: dragonGlass
-  type: "FROM_ADDRESS"
-  transactionIdentifierValue: 0.0.46764
-  statuses: ['FAILED']
+  type: "FROM_TOKEN"
+  transactionIdentifierValue: 0.0.107612
 - nodeName: hcs
   nodeType: MIRROR
   type: "TOPIC"
@@ -95,6 +91,7 @@ broadcaster:
     contractEventsUrl: https://oxiles.free.beeceptor.com
     blockEventsUrl: https://oxiles.free.beeceptor.com
     transactionEventsUrl: https://oxiles.free.beeceptor.com
+    tokenTranaferEventsUrl: https://oxiles.free.beeceptor.com
 
 
 

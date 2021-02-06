@@ -2,9 +2,11 @@ package io.oxiles.integration.eventstore.db;
 
 import java.util.Optional;
 
+import io.oxiles.chain.service.strategy.HashGraphTokenTransferData;
 import io.oxiles.dto.event.ContractEventDetails;
 import io.oxiles.integration.eventstore.db.repository.ContractEventDetailsRepository;
 import io.oxiles.integration.eventstore.db.repository.LatestBlockRepository;
+import io.oxiles.integration.eventstore.db.repository.TokenTransferRepository;
 import io.oxiles.integration.eventstore.db.repository.TransactionDetailsRepository;
 import io.oxiles.chain.service.strategy.HashGraphTransactionData;
 import io.oxiles.integration.eventstore.SaveableEventStore;
@@ -27,6 +29,8 @@ public class SqlEventStore implements SaveableEventStore {
     private JdbcTemplate jdbcTemplate;
 
     private TransactionDetailsRepository transactionDetailsRepository;
+
+    private TokenTransferRepository tokenTransferDetailRepository;
 
     public SqlEventStore(
             ContractEventDetailsRepository eventDetailsRepository,
@@ -59,6 +63,11 @@ public class SqlEventStore implements SaveableEventStore {
     }
 
     @Override
+    public boolean transferExistsByHashAndNodeType(String hash, String nodeType) {
+        return tokenTransferDetailRepository.existsByTransactionIdAndNodeType(hash, nodeType);
+    }
+
+    @Override
     public boolean isPagingZeroIndexed() {
         return true;
     }
@@ -76,5 +85,10 @@ public class SqlEventStore implements SaveableEventStore {
     @Override
     public void save(HashGraphTransactionData txData) {
         transactionDetailsRepository.save(txData);
+    }
+
+    @Override
+    public void save(HashGraphTokenTransferData transferData) {
+        tokenTransferDetailRepository.save(transferData);
     }
 }

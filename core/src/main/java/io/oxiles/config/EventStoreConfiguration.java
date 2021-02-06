@@ -8,10 +8,7 @@ import io.oxiles.integration.eventstore.EventStore;
 import io.oxiles.integration.eventstore.SaveableEventStore;
 import io.oxiles.integration.eventstore.db.MongoEventStore;
 import io.oxiles.integration.eventstore.db.SqlEventStore;
-import io.oxiles.integration.eventstore.db.repository.ContractEventDetailsRepository;
-import io.oxiles.integration.eventstore.db.repository.HCSMessageTransactionDetailsRepository;
-import io.oxiles.integration.eventstore.db.repository.LatestBlockRepository;
-import io.oxiles.integration.eventstore.db.repository.TransactionDetailsRepository;
+import io.oxiles.integration.eventstore.db.repository.*;
 import io.oxiles.integration.eventstore.rest.RESTEventStore;
 import io.oxiles.integration.eventstore.rest.client.EventStoreClient;
 import io.oxiles.monitoring.EventeumValueMonitor;
@@ -43,8 +40,9 @@ public class EventStoreConfiguration {
 				LatestBlockRepository latestBlockRepository,
 				TransactionDetailsRepository transactionDetailsRepository,
 				HCSMessageTransactionDetailsRepository hcsMessageTransactionDetailsRepository,
+				TokenTransferRepository tokenTransferRepository,
 				MongoTemplate mongoTemplate) {
-			return new MongoEventStore(contractEventRepository, latestBlockRepository, transactionDetailsRepository, hcsMessageTransactionDetailsRepository, mongoTemplate);
+			return new MongoEventStore(contractEventRepository, latestBlockRepository, transactionDetailsRepository, hcsMessageTransactionDetailsRepository, tokenTransferRepository, mongoTemplate);
 		}
 
 		@Bean

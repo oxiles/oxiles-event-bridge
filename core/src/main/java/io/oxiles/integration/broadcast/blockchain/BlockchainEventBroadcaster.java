@@ -1,5 +1,6 @@
 package io.oxiles.integration.broadcast.blockchain;
 
+import io.oxiles.chain.service.strategy.HashGraphTokenTransferData;
 import io.oxiles.dto.block.BlockDetails;
 import io.oxiles.dto.event.ContractEventDetails;
 import io.oxiles.dto.hcs.HCSMessageTransactionDetails;
@@ -36,6 +37,12 @@ public interface BlockchainEventBroadcaster {
      * @param txData
      */
     void broadcastTransaction(HashGraphTransactionData txData);
+
+    /**
+     * Broadcasts details of a monitored transaction that has been mined.
+     * @param transferData
+     */
+    void broadcastTransaction(HashGraphTokenTransferData transferData);
 
     /**
      * Broadcasts details of a transaction message from HCS.
