@@ -89,8 +89,8 @@ broadcaster:
   http:
     contractEventsUrl: https://oxilestest.free.beeceptor.com
     blockEventsUrl: https://oxilestest.free.beeceptor.com
-    transactionEventsUrl: http://localhost:8081/api/v1/hcsmessage
-    tokenTranaferEventsUrl: http://localhost:8081/api/v1/transfers
+    transactionEventsUrl: http://backend:8081/api/v1/hcsmessage
+    tokenTranaferEventsUrl: http://backend:8081/api/v1/transfers
 management:
   endpoints:
     web.base-path: /monitoring
@@ -109,3 +109,7 @@ management:
       prometheus:
         enabled: false
 
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/oxiles}
